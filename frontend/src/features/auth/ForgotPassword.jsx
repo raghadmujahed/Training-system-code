@@ -1,15 +1,34 @@
-// src/pages/auth/ForgotPassword.jsx
-import React from "react";
+import { useState } from "react";
+import { sendResetEmail } from "./authAPI";
 
-function ForgotPassword() {
+export default function ForgotPassword() {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await sendResetEmail(email);
+      setMessage("تم إرسال رابط استعادة كلمة المرور");
+    } catch {
+      setMessage("حدث خطأ أثناء الإرسال");
+    }
+  };
+
   return (
-    <div className="auth-container">
+    <div>
       <h2>استعادة كلمة المرور</h2>
-
-      <input type="email" placeholder="البريد الإلكتروني" />
-      <button>إرسال رابط الاستعادة</button>
+      {message && <p>{message}</p>}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="البريد الإلكتروني"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <button type="submit">إرسال</button>
+      </form>
     </div>
   );
 }
-
-export default ForgotPassword

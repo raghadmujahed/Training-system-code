@@ -1,38 +1,44 @@
-// src/pages/auth/Login.jsx
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "./authAPI";
 
-function Login() {
+export default function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = () => {
-    
-    const userRole = "STUDENT"; 
-
-    const roleRoutes = {
-      ADMIN: "/admin/dashboard",
-      STUDENT: "/student/home",
-      SUPERVISOR: "/supervisor/home",
-      COORDINATOR: "/coordinator/home",
-    };
-
-    navigate(roleRoutes[userRole]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await loginUser({ email, password });
+      navigate("/admin/dashboard"); // مثال توجيه بعد تسجيل الدخول
+    } catch (err) {
+      setError(err.response?.data?.message || "خطأ في تسجيل الدخول");
+    }
   };
 
   return (
-    <div className="auth-container">
+    <div className="login-container">
       <h2>تسجيل الدخول</h2>
-
-      <input type="email" placeholder="البريد الإلكتروني" />
-      <input type="password" placeholder="كلمة المرور" />
-
-      <button onClick={handleLogin}>دخول</button>
-
-      <Link to="/forgot-password" className="link">
-        نسيت كلمة المرور؟
-      </Link>
+      {error && <p className="error">{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="البريد الإلكتروني"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="كلمة المرور"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">دخول</button>
+      </form>
     </div>
   );
 }
-
-export default Login;
