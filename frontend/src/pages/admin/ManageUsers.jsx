@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUsers, deleteUser } from "../../features/users/usersAPI";
 
-export default function UsersManagement() {
+export default function ManageUsers() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
