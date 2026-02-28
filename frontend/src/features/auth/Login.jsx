@@ -11,8 +11,8 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await loginUser({ email, password });
-      navigate("/admin/dashboard"); // مثال توجيه بعد تسجيل الدخول
+      await loginUser(email, password );
+      navigate("/dashboard"); // مثال توجيه بعد تسجيل الدخول
     } catch (err) {
       setError(err.response?.data?.message || "خطأ في تسجيل الدخول");
     }
