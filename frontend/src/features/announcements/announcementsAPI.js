@@ -1,8 +1,7 @@
-// بيانات وهمية لعرض الإعلانات
-export const getAnnouncements = async () => {
-  return [
-    { id: 1, title: "إعلان 1: تدريب الصيفي" },
-    { id: 2, title: "إعلان 2: اجتماع المدرسين" },
-    { id: 3, title: "إعلان 3: عطلة رسمية" }
-  ];
-};
+import axios from "axios";
+
+const API_URL = "http://127.0.0.1:8000/api";
+
+export const getAnnouncements = () => axios.get(`${API_URL}/announcements`);
+export const createAnnouncement = (data) => axios.post(`${API_URL}/announcements`, data);
+export const deleteAnnouncement = (id) => axios.delete(`${API_URL}/announcements/${id}`);

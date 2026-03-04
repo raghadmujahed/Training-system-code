@@ -10,7 +10,7 @@ import RolesManagement from "../pages/admin/RolesManagement";
 import Backup from "../pages/admin/Backup";
 import Announcements from "../pages/admin/Announcements";
 import Reports from "../pages/DepartmentHead/Reports";
-
+import Profile from "../pages/user/Profile";
 export default function AppRouter() {
   return (
     <Router>
@@ -20,11 +20,12 @@ export default function AppRouter() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/create-user" element={<CreateUser />} />
-        <Route path="/users" element={<ManageUsers />} />
-        <Route path="/roles" element={<RolesManagement />} />
+        <Route path="/RolesManagement" element={<RolesManagement />} />
         <Route path="/backup" element={<Backup />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/announcements" element={<Announcements />} />
+        <Route path="/ManageUsers" element={<ManageUsers />} />
+        <Route path="/Profile" element={<Profile />} />
       </Routes>
     </Router>
   );
