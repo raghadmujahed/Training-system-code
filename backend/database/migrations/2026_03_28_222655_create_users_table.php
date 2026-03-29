@@ -18,6 +18,9 @@ return new class extends Migration
     $table->string('email')->nullable()->unique();
     $table->string('password');
     $table->boolean('is_active')->default(true);
+    $table->timestamp('email_verified_at')->nullable();
+    $table->rememberToken();
+    $table->foreignId('department_id')->nullable()->constrained();
     $table->timestamps();
 });
     }
