@@ -2,24 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PortfolioEntry extends Model
 {
-    protected $fillable = [
-        'portfolio_id',
-        'title',
-        'description',
-        'file_path',
-    ];
+    use HasFactory;
 
-    public function portfolio()
-    {
-        return $this->belongsTo(StudentPortfolio::class, 'portfolio_id');
-    }
+    protected $fillable = ['student_portfolio_id', 'title', 'content', 'file_path'];
 
-    public function attachments()
+    public function studentPortfolio()
     {
-        return $this->morphMany(Attachment::class, 'attachable');
+        return $this->belongsTo(StudentPortfolio::class);
     }
 }

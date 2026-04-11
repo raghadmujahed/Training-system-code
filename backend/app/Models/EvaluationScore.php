@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EvaluationScore extends Model
 {
-    protected $fillable = [
-        'evaluation_id',
-        'item_id',
-        'score',
-    ];
+    use HasFactory;
+
+    protected $fillable = ['evaluation_id', 'item_id', 'response_text', 'file_path', 'score'];
 
     public function evaluation()
     {

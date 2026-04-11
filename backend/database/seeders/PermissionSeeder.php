@@ -10,44 +10,62 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $permissions = [
-
-            // 👑 إدارة النظام
-            'manage_system',
+            // المستخدمون والأدوار والأقسام
             'manage_users',
             'manage_roles',
-
-            // 👨‍🎓 الطلاب
-            'view_students',
-            'create_students',
-            'edit_students',
-            'delete_students',
-
-            // 👨‍🏫 المعلم
-            'create_training',
-            'edit_training',
-            'view_training',
-            'grade_students',
-
-            // 🧭 الإشراف
-            'view_reports',
-            'approve_training',
-            'assign_students',
-
-            // 👨‍⚕️ الإرشاد
-            'add_counseling_note',
-            'view_counseling',
-
-            // 🧠 النفسي
-            'add_psychological_report',
-            'view_psychological_cases',
-
-            // 🏫 الإدارة
-            'manage_schools',
             'manage_departments',
+
+            // مواقع وفترات التدريب
+            'manage_training_sites',
+            'manage_training_periods',
+
+            // طلبات التدريب
+            'manage_training_requests',
+            'approve_training_requests',
+            'reject_training_requests',
+
+            // توزيع الطلبة
+            'manage_training_assignments',
+
+            // المهام والتسليمات
+            'manage_tasks',
+            'manage_task_submissions',
+
+            // الحضور
+            'manage_attendances',
+
+            // التقييمات
+            'manage_evaluations',
+            'manage_evaluation_templates',
+
+            // الإعلانات والإشعارات
+            'manage_announcements',
+            'send_notifications',
+
+            // التقارير
+            'view_reports',
+            'export_reports',
+
+            // النسخ الاحتياطي وسجل النشاطات
+            'manage_backups',
+            'view_activity_logs',
+
+            // الشعب والمساقات والتسجيلات
+            'manage_courses',
+            'manage_sections',
+            'manage_enrollments',
+
+            // ملفات الإنجاز والزيارات
+            'manage_portfolios',
+            'manage_supervisor_visits',
+
+            // إعدادات النظام والميزات
+            'manage_system_settings',
+            'manage_feature_flags',
         ];
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+        foreach ($permissions as $perm) {
+            Permission::firstOrCreate(['name' => $perm]);
         }
     }
 }

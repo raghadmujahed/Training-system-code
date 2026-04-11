@@ -10,63 +10,81 @@ class RolePermissionSeeder extends Seeder
 {
     public function run()
     {
-        // 👑 admin = كل الصلاحيات
+        // جلب الأدوار
         $admin = Role::where('name', 'admin')->first();
-        $admin->permissions()->sync(Permission::all()->pluck('id'));
-
-        // 👨‍🏫 teacher
+        $trainingCoordinator = Role::where('name', 'training_coordinator')->first();
+        $academicSupervisor = Role::where('name', 'academic_supervisor')->first();
         $teacher = Role::where('name', 'teacher')->first();
-        $teacher->permissions()->sync(
-            Permission::whereIn('name', [
-                'create_training',
-                'edit_training',
-                'view_training',
-                'grade_students',
-            ])->pluck('id')
-        );
-
-        // 👨‍🎓 student
         $student = Role::where('name', 'student')->first();
-        $student->permissions()->sync(
-            Permission::whereIn('name', [
-                'view_training',
-            ])->pluck('id')
-        );
-
-        // 🧭 counselor
-        $counselor = Role::where('name', 'adviser')->first();
-        $counselor->permissions()->sync(
-            Permission::whereIn('name', [
-                'add_counseling_note',
-                'view_counseling',
-            ])->pluck('id')
-        );
-
-        // 🧠 psychologist
-        $psychologist = Role::where('name', 'psychologist')->first();
-        $psychologist->permissions()->sync(
-            Permission::whereIn('name', [
-                'add_psychological_report',
-                'view_psychological_cases',
-            ])->pluck('id')
-        );
-
-        // 🧭 training coordinator
-        $coordinator = Role::where('name', 'training_coordinator')->first();
-        $coordinator->permissions()->sync(
-            Permission::whereIn('name', [
-                'assign_students',
-                'view_reports',
-            ])->pluck('id')
-        );
-
-        // 🏫 school manager
         $schoolManager = Role::where('name', 'school_manager')->first();
-        $schoolManager->permissions()->sync(
-            Permission::whereIn('name', [
-                'manage_students',
+        $adviser = Role::where('name', 'adviser')->first();
+        $psychologist = Role::where('name', 'psychologist')->first();
+        $headOfDepartment = Role::where('name', 'head_of_department')->first();
+        $educationDirectorate = Role::where('name', 'education_directorate')->first();
+        $healthDirectorate = Role::where('name', 'health_directorate')->first();
+
+        // 1. الأدمن: كل الصلاحيات
+        if ($admin) {
+            $admin->permissions()->sync(Permission::all());
+        }
+
+        // 2. منسق التدريب
+        if ($trainingCoordinator) {
+            $coordinatorPerms = Permission::whereIn('name', [
+                'manage_training_sites', 'manage_training_periods',
+                'manage_training_requests', 'approve_training_requests', 'reject_training_requests',
+                'manage_training_assignments',
+                'manage_announcements',
+                'view_reports', 'export_reports',
+                'manage_courses', 'manage_sections', 'manage_enrollments',
+                'manage_feature_flags',
+            ])->get();
+            $trainingCoordinator->permissions()->sync($coordinatorPerms);
+        }
+
+        // 3. المشرف الأكاديمي
+        if ($academicSupervisor) {
+            $supervisorPerms = Permission::whereIn('name', [
+                'manage_tasks', 'manage_task_submissions',
+                'manage_attendances',
+                'manage_evaluations',
                 'view_reports',
-            ])->pluck('id')
-        );
+                'manage_portfolios', 'manage_supervisor_visits',
+            ])->get();
+            $academicSupervisor->permissions()->sync($supervisorPerms);
+        }
+
+        // 4. المعلم المرشد
+        if ($teacher) {
+            $teacherPerms = Permission::whereIn('name', [
+                'manage_tasks', 'manage_task_submissions',
+                'manage_attendances',
+                'manage_evaluations',
+            ])->get();
+            $teacher->permissions()->sync($teacherPerms);
+        }
+
+        // 5. الطالب
+        if ($student) {
+            $studentPerms = Permission::whereIn('name', [
+                'manage_tasks', 'manage_task_submissions',
+                'manage_attendances',
+            ])->get();
+            $student->permissions()->sync($studentPerms);
+        }
+
+        // 6. مدير المدرسة
+        if ($schoolManager) {
+            $managerPerms = Permission::whereIn('name', [
+                'manage_training_assignments',
+                'manage_attendances',
+                'manage_evaluations',
+                'view_reports',
+            ])->get();
+            $schoolManager->permissions()->sync($managerPerms);
+        }
+
+        // الأدوار الأخرى (مرشد، أخصائي نفسي، رئيس قسم، مديريات) يمكن إعطاؤهم صلاحيات محددة حسب الحاجة
+        // إذا لم تكن هناك صلاحيات خاصة، نتركها فارغة
     }
 }

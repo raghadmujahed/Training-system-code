@@ -11,17 +11,18 @@ class DatabaseSeeder extends Seeder
     {
         // 👇 تشغيل seeders أولًا
         $this->call([
-            RoleSeeder::class,
-            PermissionSeeder::class,
-            RolePermissionSeeder::class,
-            DepartmentSeeder::class,
-        ]);
+    RoleSeeder::class,
+    DepartmentSeeder::class,
+    PermissionSeeder::class,
+    TrainingSitesSeeder::class,
+    RolePermissionSeeder::class,
+    SectionsSeeder::class ,  // أضف هذا
+    CoursesSeeder::class,
+    UsersSeeder::class, // 👈 آخر إشي
+    FeatureFlagsSeeder::class
 
-        // 👇 إنشاء الأدمن
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@test.com',
-            'password' => bcrypt('123456'),
-        ]);
+]);
+
+      
     }
 }

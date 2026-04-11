@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EvaluationTemplate extends Model
 {
-    protected $fillable = [
-        'name',
-        'description',
-    ];
+    use HasFactory;
+
+    protected $fillable = ['name', 'description', 'form_type'];
 
     public function items()
     {
@@ -18,6 +18,6 @@ class EvaluationTemplate extends Model
 
     public function evaluations()
     {
-        return $this->hasMany(Evaluation::class, 'template_id');
+        return $this->hasMany(Evaluation::class);
     }
 }

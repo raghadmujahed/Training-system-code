@@ -15,8 +15,14 @@ return new class extends Migration
     $table->id();
     $table->string('name');
     $table->text('description')->nullable();
+    $table->enum('form_type', ['evaluation', 'student_form'])->default('evaluation');
+    
+
+        $table->index('name');
+
     $table->timestamps();
 });
+
     }
 
     /**

@@ -2,41 +2,43 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TrainingRequest extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'user_id',
-        'training_site_id',
-        'start_date',
-        'end_date',
-        'status',
-        'notes',
+        'book_status', 'sent_to_directorate_at', 'directorate_approved_at',
+        'sent_to_school_at', 'school_approved_at', 'training_site_id',
+        'status', 'requested_at' ,     'rejection_reason', 'letter_number',
+    'letter_date',  'training_period_id', 
+
     ];
 
-    public function user()
+    protected $casts = [
+        'sent_to_directorate_at' => 'datetime',
+        'directorate_approved_at' => 'datetime',
+        'sent_to_school_at' => 'datetime',
+        'school_approved_at' => 'datetime',
+        'requested_at' => 'datetime',
+            'rejection_reason'=> 'string',  
+    'letter_date'=> 'datetime',
+    ];
+
+    public function trainingSite()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(TrainingSite::class);
     }
 
-    public function site()
+    public function trainingRequestStudents()
     {
-        return $this->belongsTo(TrainingSite::class, 'training_site_id');
+        return $this->hasMany(TrainingRequestStudent::class);
     }
 
-    public function assignment()
+    public function officialLetters()
     {
-        return $this->hasOne(TrainingAssignment::class);
-    }
-
-    public function attendances()
-    {
-        return $this->hasMany(Attendance::class);
-    }
-
-    public function evaluations()
-    {
-        return $this->hasMany(Evaluation::class);
+        return $this->hasMany(OfficialLetter::class);
     }
 }

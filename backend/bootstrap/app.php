@@ -14,21 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-
-        // Sanctum (API authentication)
-        $middleware->api(prepend: [
-            EnsureFrontendRequestsAreStateful::class,
-        ]);
-
-        // مهم جدًا لـ Sanctum
-        $middleware->statefulApi();
-
-        // 🔐 تسجيل الـ Role Middleware
-        $middleware->alias([
-            'role' => RoleMiddleware::class,
-        ]);
-
-    })
+    $middleware->api(prepend: [
+        \Illuminate\Http\Middleware\HandleCors::class,
+    ]);
+})
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })

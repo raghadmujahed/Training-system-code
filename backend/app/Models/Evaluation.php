@@ -2,21 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Evaluation extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'training_request_id',
-        'evaluator_id',
-        'template_id',
-        'total_score',
-        'notes',
+        'training_assignment_id', 'evaluator_id', 'template_id',
+        'total_score', 'notes'
     ];
 
-    public function request()
+    public function trainingAssignment()
     {
-        return $this->belongsTo(TrainingRequest::class);
+        return $this->belongsTo(TrainingAssignment::class);
     }
 
     public function evaluator()
@@ -26,7 +26,7 @@ class Evaluation extends Model
 
     public function template()
     {
-        return $this->belongsTo(EvaluationTemplate::class, 'template_id');
+        return $this->belongsTo(EvaluationTemplate::class);
     }
 
     public function scores()

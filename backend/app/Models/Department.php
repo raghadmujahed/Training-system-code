@@ -2,12 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model
 {
-   public function users()
-{
-    return $this->hasMany(User::class);
-}
+    use HasFactory;
+
+    protected $fillable = ['name'];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function announcementTargets()
+    {
+        return $this->hasMany(AnnouncementTarget::class, 'department_id');
+    }
 }

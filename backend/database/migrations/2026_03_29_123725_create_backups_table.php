@@ -11,31 +11,35 @@ return new class extends Migration
         Schema::create('backups', function (Blueprint $table) {
             $table->id();
 
-            // من أنشأ النسخة (اختياري)
             $table->foreignId('user_id')
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete();
 
-            // نوع النسخة: database / files / full
             $table->string('type');
-
-            // اسم النسخة
             $table->string('name');
-
-            // مسار الملف أو مكان التخزين
             $table->string('file_path');
-
-            // حجم الملف (KB / MB)
             $table->bigInteger('size')->nullable();
-
-            // الحالة: success / failed / in_progress
             $table->string('status')->default('success');
-
-            // ملاحظات
             $table->text('notes')->nullable();
 
             $table->timestamps();
+
+            // =========================
+            // INDEXES
+            // =========================
+
+            // المستخدم الذي أنشأ النسخة
+            $table->index('user_id');
+
+            // مهم للبحث حسب النوع
+            $table->index('type');
+
+            // مهم جداً لتتبع الحالات
+            $table->index('status');
+
+            // لتسريع عرض أحدث النسخ
+            $table->index('created_at');
         });
     }
 
