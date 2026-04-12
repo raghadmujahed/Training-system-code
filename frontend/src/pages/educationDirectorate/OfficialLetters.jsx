@@ -1,212 +1,163 @@
 import { useState } from "react";
 
-export default function TrainingPlaces() {
-  const [places] = useState([
+const OfficialLetters = () => {
+  const [savedMessage, setSavedMessage] = useState("");
+
+  const [letters, setLetters] = useState([
     {
       id: 1,
-      name: "مدرسة الحسين الثانوية",
-      type: "مدرسة حكومية",
-      city: "الخليل",
-      capacity: 12,
-      status: "متاح",
+      title: "كتاب توزيع الطلبة المتدربين",
+      receiver: "مدارس مديرية الخليل",
+      date: "2026-03-28",
+      status: "بانتظار الموافقة",
+      notes: "",
     },
     {
       id: 2,
-      name: "مدرسة الملك خالد",
-      type: "مدرسة حكومية",
-      city: "دورا",
-      capacity: 8,
-      status: "متاح",
+      title: "كتاب اعتماد أماكن التدريب",
+      receiver: "مدارس المرحلة الثانوية",
+      date: "2026-03-27",
+      status: "تمت الموافقة",
+      notes: "تمت المراجعة من قبل مسؤول المديرية.",
     },
     {
       id: 3,
-      name: "مدرسة بنات الخليل",
-      type: "مدرسة حكومية",
-      city: "الخليل",
-      capacity: 0,
-      status: "مكتمل",
+      title: "كتاب تحديث الطاقة الاستيعابية",
+      receiver: "جميع المدارس",
+      date: "2026-03-26",
+      status: "تم الإرسال",
+      notes: "",
+    },
+    {
+      id: 4,
+      title: "كتاب إعادة اعتماد المدارس المستقبلة للطلبة",
+      receiver: "مدارس مديرية الخليل",
+      date: "2026-03-25",
+      status: "مؤرشف",
+      notes: "تم حفظ الكتاب في الأرشيف بعد التنفيذ.",
     },
   ]);
 
-  const getStatusClass = (status) => {
-    if (status === "متاح") return "badge-custom badge-success";
-    if (status === "مكتمل") return "badge-custom badge-danger";
-    return "badge-custom badge-soft";
+  const handleStatusChange = (id, value) => {
+    setLetters((prev) =>
+      prev.map((letter) =>
+        letter.id === id ? { ...letter, status: value } : letter
+      )
+    );
+    setSavedMessage("");
+  };
+
+  const handleNotesChange = (id, value) => {
+    setLetters((prev) =>
+      prev.map((letter) =>
+        letter.id === id ? { ...letter, notes: value } : letter
+      )
+    );
+    setSavedMessage("");
+  };
+
+  const handleSave = () => {
+    setSavedMessage("تم حفظ التعديلات على الكتب الرسمية بنجاح.");
+  };
+
+  const getBadgeClass = (status) => {
+    if (status === "تمت الموافقة") return "badge-custom badge-success";
+    if (status === "تم الإرسال") return "badge-custom badge-info";
+    if (status === "مؤرشف") return "badge-custom badge-soft";
+    return "badge-custom badge-warning";
   };
 
   return (
     <>
       <div className="content-header">
-        <h1 className="page-title">أماكن التدريب</h1>
+        <h1 className="page-title">الكتب الرسمية</h1>
         <p className="page-subtitle">
-          إدارة وعرض أماكن التدريب المعتمدة التابعة لمديرية التربية والتعليم.
+          متابعة الكتب الرسمية، اعتمادها، تحديث حالتها، وإرسالها إلى المدارس.
         </p>
       </div>
 
-      <div className="dashboard-grid mb-3">
-        <div className="stat-card primary">
-          <div className="stat-title">إجمالي الأماكن</div>
-          <div className="stat-value">{places.length}</div>
-          <div className="stat-meta">أماكن التدريب المسجلة</div>
-        </div>
-
-        <div className="stat-card success">
-          <div className="stat-title">الأماكن المتاحة</div>
-          <div className="stat-value">
-            {places.filter((item) => item.status === "متاح").length}
-          </div>
-          <div className="stat-meta">جاهزة لاستقبال الطلبة</div>
-        </div>
-
-        <div className="stat-card danger">
-          <div className="stat-title">الأماكن المكتملة</div>
-          <div className="stat-value">
-            {places.filter((item) => item.status === "مكتمل").length}
-          </div>
-          <div className="stat-meta">وصلت إلى الحد الأقصى</div>
-        </div>
-
-        <div className="stat-card accent">
-          <div className="stat-title">السعة الإجمالية</div>
-          <div className="stat-value">
-            {places.reduce((sum, item) => sum + item.capacity, 0)}
-          </div>
-          <div className="stat-meta">المقاعد المتاحة حاليًا</div>
-        </div>
-      </div>
-
-      <div className="dashboard-row">
-        <div className="section-card">
-          <div className="panel-header">
-            <div>
-              <h3 className="panel-title">إضافة مكان تدريب جديد</h3>
-              <p className="panel-subtitle">
-                تسجيل مدرسة أو جهة تدريب جديدة تابعة للمديرية.
-              </p>
-            </div>
-          </div>
-
-          <form>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <label className="form-label-custom">اسم جهة التدريب</label>
-                <input
-                  type="text"
-                  className="form-control-custom"
-                  placeholder="أدخل اسم جهة التدريب"
-                />
-              </div>
-
-              <div className="col-md-6">
-                <label className="form-label-custom">نوع الجهة</label>
-                <select className="form-select-custom">
-                  <option value="">اختر النوع</option>
-                  <option value="school">مدرسة حكومية</option>
-                  <option value="private">مدرسة خاصة</option>
-                  <option value="center">مركز تعليمي</option>
-                </select>
-              </div>
-
-              <div className="col-md-6">
-                <label className="form-label-custom">المدينة</label>
-                <input
-                  type="text"
-                  className="form-control-custom"
-                  placeholder="أدخل اسم المدينة"
-                />
-              </div>
-
-              <div className="col-md-6">
-                <label className="form-label-custom">السعة</label>
-                <input
-                  type="number"
-                  className="form-control-custom"
-                  placeholder="أدخل عدد الطلبة الممكن استقبالهم"
-                />
-              </div>
-            </div>
-
-            <div className="mt-3">
-              <button type="button" className="btn-primary-custom">
-                حفظ مكان التدريب
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div className="announcement-box">
-          <h5>ملاحظة</h5>
-          <p>
-            يرجى التأكد من تحديث عدد المقاعد المتاحة بشكل دوري، وربط أماكن
-            التدريب الفعالة فقط ضمن النظام.
-          </p>
-        </div>
-      </div>
-
       <div className="section-card">
-        <div className="panel-header">
-          <div>
-            <h3 className="panel-title">قائمة أماكن التدريب</h3>
-            <p className="panel-subtitle">
-              جميع المدارس والجهات التدريبية التابعة لمديرية التربية والتعليم.
-            </p>
-          </div>
-        </div>
+        <h4>إدارة الكتب الرسمية</h4>
 
         <div className="table-wrapper">
           <table className="table-custom">
             <thead>
               <tr>
-                <th>اسم المكان</th>
-                <th>النوع</th>
-                <th>المدينة</th>
-                <th>السعة</th>
-                <th>الحالة</th>
-                <th>إجراء</th>
+                <th>عنوان الكتاب</th>
+                <th>الجهة المستلمة</th>
+                <th>التاريخ</th>
+                <th>الحالة الحالية</th>
+                <th>تعديل الحالة</th>
+                <th>الملاحظات</th>
               </tr>
             </thead>
             <tbody>
-              {places.map((place) => (
-                <tr key={place.id}>
-                  <td>{place.name}</td>
-                  <td>{place.type}</td>
-                  <td>{place.city}</td>
-                  <td>{place.capacity}</td>
+              {letters.map((letter) => (
+                <tr key={letter.id}>
+                  <td>{letter.title}</td>
+                  <td>{letter.receiver}</td>
+                  <td>{letter.date}</td>
                   <td>
-                    <span className={getStatusClass(place.status)}>
-                      {place.status}
+                    <span className={getBadgeClass(letter.status)}>
+                      {letter.status}
                     </span>
                   </td>
                   <td>
-                    <div className="table-actions">
-                      <button
-                        type="button"
-                        className="btn-outline-custom btn-sm-custom"
-                      >
-                        عرض
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-primary-custom btn-sm-custom"
-                      >
-                        تعديل
-                      </button>
-                    </div>
+                    <select
+                      className="form-select-custom"
+                      value={letter.status}
+                      onChange={(e) =>
+                        handleStatusChange(letter.id, e.target.value)
+                      }
+                    >
+                      <option value="بانتظار الموافقة">بانتظار الموافقة</option>
+                      <option value="تمت الموافقة">تمت الموافقة</option>
+                      <option value="تم الإرسال">تم الإرسال</option>
+                      <option value="مؤرشف">مؤرشف</option>
+                    </select>
+                  </td>
+                  <td>
+                    <textarea
+                      className="form-textarea-custom"
+                      value={letter.notes}
+                      onChange={(e) =>
+                        handleNotesChange(letter.id, e.target.value)
+                      }
+                      placeholder="اكتب ملاحظات حول الكتاب"
+                    />
                   </td>
                 </tr>
               ))}
 
-              {places.length === 0 && (
+              {letters.length === 0 && (
                 <tr>
                   <td colSpan="6" className="text-center">
-                    لا توجد أماكن تدريب مسجلة حاليًا
+                    لا توجد كتب رسمية مسجلة حاليًا
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        <div className="mt-3">
+          <button
+            type="button"
+            className="btn-primary-custom"
+            onClick={handleSave}
+          >
+            حفظ التعديلات
+          </button>
+        </div>
+
+        {savedMessage && (
+          <div className="alert-custom alert-success mt-3">
+            {savedMessage}
+          </div>
+        )}
       </div>
     </>
   );
-}
+};
+
+export default OfficialLetters;
