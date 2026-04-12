@@ -23,30 +23,25 @@ class UserController extends Controller
         $this->authorizeResource(User::class, 'user');
     }
 
-    public function index(Request $request)
-    {
-        $query = User::with(['role', 'department']);
-        
-        if ($request->has('role_id')) {
-            $query->where('role_id', $request->role_id);
-        }
-        if ($request->has('department_id')) {
-            $query->where('department_id', $request->department_id);
-        }
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->has('search')) {
-            $query->where(function($q) use ($request) {
-                $q->where('name', 'like', '%'.$request->search.'%')
-                  ->orWhere('email', 'like', '%'.$request->search.'%')
-                  ->orWhere('university_id', 'like', '%'.$request->search.'%');
-            });
-        }
-        
-        $users = $query->latest()->paginate($request->per_page ?? 15);
-        return UserResource::collection($users);
-    }
+  public function index(Request $request)
+{
+    $users = User::query();
+    
+    $users->when($request->role_id, function ($q) use ($request) {
+        $q->where('role_id', $request->role_id);
+    });
+
+    $users->when($request->status, function ($q) use ($request) {
+        $q->where('status', $request->status);
+    });
+
+    $users->when($request->search, function ($q) use ($request) {
+        $q->where('name', 'like', "%{$request->search}%")
+          ->orWhere('email', 'like', "%{$request->search}%");
+    });
+
+    return response()->json($users->with('role')->paginate(10));
+}
 
     public function store(StoreUserRequest $request)
     {

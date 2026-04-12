@@ -18,6 +18,7 @@ use App\Policies\EvaluationPolicy;
 use App\Policies\AttendancePolicy;
 use App\Policies\StudentPortfolioPolicy;
 use App\Policies\TrainingSitePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -33,7 +34,11 @@ class AuthServiceProvider extends ServiceProvider
      TrainingSite::class => TrainingSitePolicy::class,
 ];
     public function boot(): void
-    {
-        $this->registerPolicies();
-    }
+{
+    Gate::before(function ($user, $ability) {
+        if ($user->role?->name === 'admin') {
+            return true;
+        }
+    });
+}
 }

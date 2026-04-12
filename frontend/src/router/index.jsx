@@ -5,9 +5,34 @@ import ProtectedRoute from "./ProtectedRoute";
 import Login from "../pages/auth/Login";
 
 // Admin
-import Dashboard from "../pages/dashboard/Dashboard";
-import Users from "../pages/admin/Users";
-import Reports from "../pages/admin/Reports";
+import AdminDashboard from "../pages/dashboard/AdminDashboard";
+import UsersList from "../pages/Admin/Users/UsersList";
+import UserForm from "../pages/admin/Users/UserForm";
+import RolesList from "../pages/admin/Roles/RolesList";
+import RoleForm from "../pages/admin/Roles/RoleForm";
+import PermissionsList from "../pages/admin/Permissions/PermissionsList";
+import DepartmentsList from "../pages/admin/Departments/DepartmentsList";
+import DepartmentForm from "../pages/admin/Departments/DepartmentForm";
+import CoursesList from "../pages/admin/Courses/CoursesList";
+import CourseForm from "../pages/admin/Courses/CourseForm";
+import SectionsList from "../pages/Admin/Sections/SectionsList";
+import SectionForm from "../pages/Admin/Sections/SectionForm";
+import EnrollmentsList from "../pages/Admin/Enrollments/EnrollmentsList";
+import EnrollmentForm from "../pages/Admin/Enrollments/EnrollmentForm";
+import TrainingSitesList from "../pages/admin/TrainingSites/TrainingSitesList";
+import TrainingSiteForm from "../pages/admin/TrainingSites/TrainingSiteForm";
+import TrainingPeriodsList from "../pages/admin/TrainingPeriods/TrainingPeriodsList";
+import TrainingPeriodForm from "../pages/admin/TrainingPeriods/TrainingPeriodForm";
+import AnnouncementsList from "../pages/admin/Announcements/AnnouncementsList";
+import AnnouncementForm from "../pages/admin/Announcements/AnnouncementForm";
+import BackupsList from "../pages/admin/Backups/BackupsList";
+import ActivityLogsList from "../pages/admin/ActivityLogs/ActivityLogsList";
+import FeatureFlagsList from "../pages/admin/FeatureFlags/FeatureFlagsList";
+import EvaluationTemplatesList from "../pages/admin/EvaluationTemplates/EvaluationTemplatesList";
+import EvaluationTemplateForm from "../pages/admin/EvaluationTemplates/EvaluationTemplateForm";
+
+// ✅ Reports (FIXED)
+import ReportsDashboard from "../pages/reports/ReportsDashboard";
 
 // Student
 import TrainingRequest from "../pages/student/TrainingRequest";
@@ -68,10 +93,56 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         >
-          {/* Admin */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin/users" element={<Users />} />
-          <Route path="/reports" element={<Reports />} />
+          {/* Admin Routes */}
+          <Route path="/dashboard" element={<AdminDashboard />} />
+
+          <Route path="/admin/users" element={<UsersList />} />
+          <Route path="/admin/users/create" element={<UserForm />} />
+          <Route path="/admin/users/edit/:id" element={<UserForm />} />
+
+          <Route path="/admin/roles" element={<RolesList />} />
+          <Route path="/admin/roles/create" element={<RoleForm />} />
+          <Route path="/admin/roles/edit/:id" element={<RoleForm />} />
+
+          <Route path="/admin/permissions" element={<PermissionsList />} />
+
+          <Route path="/admin/departments" element={<DepartmentsList />} />
+          <Route path="/admin/departments/create" element={<DepartmentForm />} />
+          <Route path="/admin/departments/edit/:id" element={<DepartmentForm />} />
+
+          <Route path="/admin/courses" element={<CoursesList />} />
+          <Route path="/admin/courses/create" element={<CourseForm />} />
+          <Route path="/admin/courses/edit/:id" element={<CourseForm />} />
+
+          <Route path="/admin/sections" element={<SectionsList />} />
+          <Route path="/admin/sections/create" element={<SectionForm />} />
+          <Route path="/admin/sections/edit/:id" element={<SectionForm />} />
+
+          <Route path="/admin/enrollments" element={<EnrollmentsList />} />
+          <Route path="/admin/enrollments/create" element={<EnrollmentForm />} />
+
+          <Route path="/admin/training-sites" element={<TrainingSitesList />} />
+          <Route path="/admin/training-sites/create" element={<TrainingSiteForm />} />
+          <Route path="/admin/training-sites/edit/:id" element={<TrainingSiteForm />} />
+
+          <Route path="/admin/training-periods" element={<TrainingPeriodsList />} />
+          <Route path="/admin/training-periods/create" element={<TrainingPeriodForm />} />
+          <Route path="/admin/training-periods/edit/:id" element={<TrainingPeriodForm />} />
+
+          <Route path="/admin/announcements" element={<AnnouncementsList />} />
+          <Route path="/admin/announcements/create" element={<AnnouncementForm />} />
+          <Route path="/admin/announcements/edit/:id" element={<AnnouncementForm />} />
+
+          <Route path="/admin/backups" element={<BackupsList />} />
+          <Route path="/admin/activity-logs" element={<ActivityLogsList />} />
+          <Route path="/admin/feature-flags" element={<FeatureFlagsList />} />
+
+          <Route path="/admin/evaluation-templates" element={<EvaluationTemplatesList />} />
+          <Route path="/admin/evaluation-templates/create" element={<EvaluationTemplateForm />} />
+          <Route path="/admin/evaluation-templates/edit/:id" element={<EvaluationTemplateForm />} />
+
+          {/* ✅ FIXED REPORTS */}
+          <Route path="/reports" element={<ReportsDashboard />} />
 
           {/* Student */}
           <Route path="/student/dashboard" element={<StudentDashboard />} />
@@ -80,10 +151,7 @@ export default function AppRouter() {
           <Route path="/student/training-log" element={<TrainingLog />} />
           <Route path="/student/assignments" element={<Assignments />} />
           <Route path="/student/training-request" element={<TrainingRequest />} />
-          <Route
-            path="/student/notifications-updates"
-            element={<NotificationsUpdates />}
-          />
+          <Route path="/student/notifications-updates" element={<NotificationsUpdates />} />
 
           {/* Supervisor */}
           <Route path="/supervisor/dashboard" element={<SupervisorDashboard />} />
@@ -100,46 +168,22 @@ export default function AppRouter() {
           <Route path="/mentor/attendance" element={<Attendance />} />
 
           {/* Coordinator */}
-          <Route
-            path="/coordinator/dashboard"
-            element={<CoordinatorDashboard />}
-          />
+          <Route path="/coordinator/dashboard" element={<CoordinatorDashboard />} />
 
           {/* Principal */}
           <Route path="/principal/dashboard" element={<PrincipalDashboard />} />
           <Route path="/principal/profile" element={<PrincipalProfile />} />
-          <Route
-            path="/principal/mentor-assignment"
-            element={<MentorAssignment />}
-          />
-          <Route
-            path="/principal/trainee-students"
-            element={<TraineeStudents />}
-          />
-          <Route
-            path="/principal/official-letters"
-            element={<PrincipalOfficialLetters />}
-          />
+          <Route path="/principal/mentor-assignment" element={<MentorAssignment />} />
+          <Route path="/principal/trainee-students" element={<TraineeStudents />} />
+          <Route path="/principal/official-letters" element={<PrincipalOfficialLetters />} />
 
-          {/* Health Directorate */}
-          <Route
-            path="/health/dashboard"
-            element={<HealthDirectorateDashboard />}
-          />
+          {/* Health */}
+          <Route path="/health/dashboard" element={<HealthDirectorateDashboard />} />
 
-          {/* Education Directorate */}
-          <Route
-            path="/education/dashboard"
-            element={<EducationDirectorateDashboard />}
-          />
-          <Route
-            path="/education/training-sites"
-            element={<TrainingSites />}
-          />
-          <Route
-            path="/education/official-letters"
-            element={<EducationOfficialLetters />}
-          />
+          {/* Education */}
+          <Route path="/education/dashboard" element={<EducationDirectorateDashboard />} />
+          <Route path="/education/training-sites" element={<TrainingSites />} />
+          <Route path="/education/official-letters" element={<EducationOfficialLetters />} />
 
           {/* Common */}
           <Route path="/profile" element={<Profile />} />

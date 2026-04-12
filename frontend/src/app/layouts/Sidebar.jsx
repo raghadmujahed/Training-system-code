@@ -14,9 +14,35 @@ const roleLabels = {
 const menus = {
   admin: [
     { name: "الرئيسية", path: "/dashboard" },
+    
+    // إدارة المستخدمين والصلاحيات
     { name: "إدارة المستخدمين", path: "/admin/users" },
+    { name: "إدارة الأدوار", path: "/admin/roles" },
+    { name: "إدارة الصلاحيات", path: "/admin/permissions" },
+    
+    // إدارة الهيكل الأكاديمي
+    { name: "إدارة الأقسام", path: "/admin/departments" },
+    { name: "إدارة المساقات", path: "/admin/courses" },
+    { name: "إدارة الشعب", path: "/admin/sections" },
+    { name: "تسجيل الطلاب في الشعب", path: "/admin/enrollments" },
+    
+    // إدارة التدريب الميداني
+    { name: "إدارة مواقع التدريب", path: "/admin/training-sites" },
+    { name: "إدارة الفترات التدريبية", path: "/admin/training-periods" },
+    
+    // إدارة المحتوى والإشعارات
+    { name: "إدارة الإعلانات", path: "/admin/announcements" },
+    { name: "إدارة قوالب التقييم", path: "/admin/evaluation-templates" },
+    
+    // إدارة النظام
+    { name: "النسخ الاحتياطي", path: "/admin/backups" },
+    { name: "سجل النشاطات", path: "/admin/activity-logs" },
+    { name: "الميزات الديناميكية", path: "/admin/feature-flags" },
+    
+    // تقارير
     { name: "التقارير", path: "/reports" },
   ],
+  
 
   supervisor: [
     { name: "الرئيسية", path: "/supervisor/dashboard" },
@@ -76,10 +102,10 @@ const menus = {
 export default function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
   const savedUser = JSON.parse(localStorage.getItem("user")) || {};
-  const role = savedUser?.role || "admin";
+  const role = savedUser?.role?.name || savedUser?.role || "admin";
   const userName = savedUser?.name || "مستخدم تجريبي";
-  const roleName = roleLabels[role] || "مستخدم النظام";
-  const menu = menus[role] || [];
+const roleName = roleLabels[role] || "مستخدم النظام";
+const menu = menus[role] || [];
 
   const getInitials = (name) => {
     if (!name) return "HU";

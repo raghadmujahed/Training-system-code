@@ -1,58 +1,70 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ROLES } from "../../utils/roles";
-
+import { login } from "../../services/api";
 import myLogo from "../../assets/HU Logo.webp";
 
 export default function Login() {
-  const [role, setRole] = useState(ROLES.ADMIN);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-const handleLogin = () => {
-  const fakeUser = {
-    name: "مستخدم تجريبي",
-    role,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await login({ email, password });
+
+      const user = response.user;
+      const token = response.access_token; // ✔️ التصحيح هنا
+      const userRole = user?.role?.name;
+
+      // 🔥 تخزين البيانات
+      localStorage.setItem("access_token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      console.log(user);
+console.log(user?.role);
+console.log(user?.role?.name);
+
+      // التوجيه حسب الدور
+      switch (userRole) {
+        case "admin":
+          navigate("/dashboard");
+          break;
+        case "coordinator":
+          navigate("/coordinator/dashboard");
+          break;
+        case "academic_supervisor":
+          navigate("/supervisor/dashboard");
+          break;
+        case "teacher":
+          navigate("/mentor/dashboard");
+          break;
+        case "school_manager":
+          navigate("/principal/dashboard");
+          break;
+        case "education_directorate":
+          navigate("/education/dashboard");
+          break;
+        case "ministry_of_health":
+          navigate("/health/dashboard");
+          break;
+        case "student":
+          navigate("/student/dashboard");
+          break;
+        default:
+          navigate("/");
+      }
+
+    } catch (err) {
+      setError(err.response?.data?.message || "فشل تسجيل الدخول");
+    } finally {
+      setLoading(false);
+    }
   };
-
-  localStorage.setItem("user", JSON.stringify(fakeUser));
-
-  switch (role) {
-    case ROLES.ADMIN:
-      navigate("/dashboard");
-      break;
-
-    case ROLES.STUDENT:
-      navigate("/student/dashboard");
-      break;
-
-    case ROLES.SUPERVISOR:
-      navigate("/supervisor/dashboard");
-      break;
-
-    case ROLES.MENTOR:
-      navigate("/mentor/dashboard");
-      break;
-
-    case ROLES.COORDINATOR:
-      navigate("/coordinator/dashboard");
-      break;
-
-    case ROLES.PRINCIPAL:
-      navigate("/principal/dashboard");
-      break;
-
-    case ROLES.HEALTH:
-      navigate("/health/dashboard");
-      break;
-
-    case ROLES.EDUCATION:
-      navigate("/education/dashboard");
-      break;
-
-    default:
-      navigate("/");
-  }
-};
 
   return (
     <div className="auth-page">
@@ -65,7 +77,6 @@ const handleLogin = () => {
               المتابعة، التقييم، والتواصل بين جميع الأطراف داخل بيئة أكاديمية
               منظمة.
             </p>
-
             <div className="auth-points">
               <div className="auth-point">متابعة التدريب الميداني بشكل منظم</div>
               <div className="auth-point">إدارة التقييمات والتقارير إلكترونيًا</div>
@@ -76,45 +87,50 @@ const handleLogin = () => {
 
         <div className="auth-card">
           <div className="auth-logo">
-            <img
-              src={myLogo}
-              alt="HU Logo"
-              style={{ width: "120px", marginBottom: "20px" }}
-            />
+            <img src={myLogo} alt="HU Logo" style={{ width: "120px", marginBottom: "20px" }} />
           </div>
 
           <h2>تسجيل الدخول</h2>
-          <p>اختر نوع المستخدم للدخول إلى لوحة التحكم الخاصة بك.</p>
+          <p>أدخل بريدك الإلكتروني وكلمة المرور للدخول إلى النظام.</p>
 
-          <div className="auth-form">
+          <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group-custom">
-              <label className="form-label-custom">نوع المستخدم</label>
-              <select
-                className="form-select-custom"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value={ROLES.ADMIN}>مدير النظام</option>
-                <option value={ROLES.COORDINATOR}>المنسق الأكاديمي</option>
-                <option value={ROLES.SUPERVISOR}>المشرف الأكاديمي</option>
-                <option value={ROLES.MENTOR}>المشرف الميداني</option>
-                <option value={ROLES.PRINCIPAL}>مدير جهة التدريب</option>
-                <option value={ROLES.HEALTH}>مديرية الصحة</option>
-                <option value={ROLES.EDUCATION}>مديرية التربية والتعليم</option>
-                <option value={ROLES.STUDENT}>الطالب المتدرب</option>
-              </select>
-              <small className="input-hint">
-                هذا دخول تجريبي لاختبار الصلاحيات والواجهات المختلفة.
-              </small>
+              <label className="form-label-custom">البريد الإلكتروني</label>
+              <input
+                type="email"
+                className="form-input-custom"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="example@hebron.edu"
+              />
             </div>
 
-            <button className="auth-btn" onClick={handleLogin}>
-              تسجيل الدخول
+            <div className="form-group-custom">
+              <label className="form-label-custom">كلمة المرور</label>
+              <input
+                type="password"
+                className="form-input-custom"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />
+            </div>
+
+            {error && (
+              <div className="error-message" style={{ color: "red", marginBottom: "10px" }}>
+                {error}
+              </div>
+            )}
+
+            <button className="auth-btn" type="submit" disabled={loading}>
+              {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
             </button>
-          </div>
+          </form>
 
           <div className="auth-extra">
-            سيتم توجيهك إلى لوحة التحكم المناسبة حسب الدور المختار.
+            سيتم توجيهك إلى لوحة التحكم المناسبة حسب الدور المخول لك.
           </div>
         </div>
       </div>
