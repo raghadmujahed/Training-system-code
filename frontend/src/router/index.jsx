@@ -56,7 +56,7 @@ import Sections from "../pages/supervisor/Sections";
 import Evaluations from "../pages/supervisor/Evaluations";
 import SupervisorReports from "../pages/supervisor/Reports";
 import Submissions from "../pages/supervisor/Submissions";
-import TrainingLogs from "../pages/supervisor/TrainingLogs";
+//import TrainingLogs from "../pages/supervisor/TrainingLogs";
 
 // Mentor
 import MentorDashboard from "../pages/dashboard/MentorDashboard";
@@ -161,7 +161,6 @@ export default function AppRouter() {
           <Route path="/supervisor/evaluations" element={<Evaluations />} />
           <Route path="/supervisor/reports" element={<SupervisorReports />} />
           <Route path="/supervisor/submissions" element={<Submissions />} />
-          <Route path="/supervisor/training-logs" element={<TrainingLogs />} />
 
           {/* Mentor */}
           <Route path="/mentor/dashboard" element={<MentorDashboard />} />
