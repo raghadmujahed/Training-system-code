@@ -203,8 +203,8 @@ export default function StudentDashboard() {
         {latestItems.length === 0 ? (
           <p>لا توجد إشعارات حديثة.</p>
         ) : (
-          <div className="activity-list">
-            {latestItems.map((item, index) => (
+          <div className="activity-list"> 
+            {latestItems.map((item , index) => (
               <div key={index} className="activity-item">
                 <div className="mb-1">
                   <span className={getBadgeClass(item.type)}>{item.type}</span>

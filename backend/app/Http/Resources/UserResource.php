@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\FeatureFlag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Enums\UserStatus;
 
 class UserResource extends JsonResource
 {
@@ -15,14 +15,36 @@ class UserResource extends JsonResource
             'university_id' => $this->university_id,
             'name' => $this->name,
             'email' => $this->email,
-            'status' => $this->status,
-            'status_label' => UserStatus::tryFrom($this->status)?->label() ?? $this->status,
             'phone' => $this->phone,
-            'department' => new DepartmentResource($this->whenLoaded('department')),
+            'status' => $this->status,
+            'status_label' => $this->status_label,
+            'role_id' => $this->role_id,
             'role' => new RoleResource($this->whenLoaded('role')),
+            'department_id' => $this->department_id,
+            'department' => new DepartmentResource($this->whenLoaded('department')),
+            'major' => $this->major,
+            'subject' => $this->subject,
+            'school_name' => $this->school_name,
+            'academic_department' => $this->academic_department,
+            'institution_name' => $this->institution_name,
+            'training_site_id' => $this->training_site_id,
+            'training_site' => new TrainingSiteResource($this->whenLoaded('trainingSite')),
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
             'deleted_at' => $this->deleted_at?->toDateTimeString(),
+            'features' => $this->getDynamicFeatures(),
         ];
     }
+
+  protected function getDynamicFeatures(): array
+{
+    $features = [];
+    if ($this->role?->name === 'student') {
+        $flag = FeatureFlag::where('name', 'training_requests.create')->first();
+        $features['training_requests.create'] = $flag && $flag->is_open ? 1 : 0; // استخدم is_open
+    } else {
+        $features['training_requests.create'] = 0;
+    }
+    return $features;
+}
 }

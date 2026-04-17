@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
     SectionsSeeder::class ,  // أضف هذا
     CoursesSeeder::class,
     UsersSeeder::class, // 👈 آخر إشي
-    FeatureFlagsSeeder::class
+    FeatureFlagsSeeder::class , 
+    EducationFoundationFormsSeeder::class, 
+
 
 ]);
 

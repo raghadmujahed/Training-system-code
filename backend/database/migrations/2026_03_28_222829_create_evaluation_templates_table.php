@@ -16,7 +16,13 @@ return new class extends Migration
     $table->string('name');
     $table->text('description')->nullable();
     $table->enum('form_type', ['evaluation', 'student_form'])->default('evaluation');
-    
+    $table->foreignId('department_id')
+                  ->nullable()
+                  ->constrained('departments')
+                  ->onDelete('set null');
+            
+            // إضافة فهرس للبحث السريع
+            $table->index('department_id');
 
         $table->index('name');
 

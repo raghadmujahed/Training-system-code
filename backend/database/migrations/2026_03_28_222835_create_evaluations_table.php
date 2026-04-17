@@ -29,6 +29,8 @@ return new class extends Migration
             $table->decimal('total_score', 5, 2)->nullable();
             $table->text('notes')->nullable();
 
+             $table->timestamp('approved_at')->nullable();
+
             $table->timestamps();
 
             // =========================

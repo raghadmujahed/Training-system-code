@@ -11,7 +11,6 @@ use App\Http\Resources\EvaluationTemplateResource;
 use App\Models\EvaluationTemplate;
 use App\Models\EvaluationItem;
 use Illuminate\Http\Request;
-
 class EvaluationTemplateController extends Controller
 {
     public function __construct()
@@ -22,15 +21,27 @@ class EvaluationTemplateController extends Controller
     public function index(Request $request)
     {
         $query = EvaluationTemplate::with('items');
-        if ($request->has('form_type')) $query->where('form_type', $request->form_type);
+        
+        if (!auth()->user()->isAdmin()) {
+            $query->where('department_id', auth()->user()->department_id);
+        }
+        
+        if ($request->has('form_type')) {
+            $query->where('form_type', $request->form_type);
+        }
+        
         $templates = $query->paginate($request->per_page ?? 15);
         return EvaluationTemplateResource::collection($templates);
     }
 
     public function store(StoreEvaluationTemplateRequest $request)
     {
-        $template = EvaluationTemplate::create($request->validated());
-        return new EvaluationTemplateResource($template);
+        $data = $request->validated();
+        if (!isset($data['department_id']) && auth()->user()->department_id) {
+            $data['department_id'] = auth()->user()->department_id;
+        }
+        $evaluationTemplate = EvaluationTemplate::create($data);
+        return new EvaluationTemplateResource($evaluationTemplate);
     }
 
     public function show(EvaluationTemplate $evaluationTemplate)
@@ -50,7 +61,6 @@ class EvaluationTemplateController extends Controller
         return response()->json(['message' => 'تم حذف القالب']);
     }
 
-    // إدارة بنود القالب
     public function addItem(StoreEvaluationItemRequest $request, EvaluationTemplate $evaluationTemplate)
     {
         $item = $evaluationTemplate->items()->create($request->validated());

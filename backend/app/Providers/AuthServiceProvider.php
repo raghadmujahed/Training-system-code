@@ -26,6 +26,8 @@ use App\Policies\PortfolioEntryPolicy;
 use App\Policies\OfficialLetterPolicy;   // <-- أضف هذا
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\EvaluationTemplate;
+use App\Policies\EvaluationTemplatePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -41,6 +43,8 @@ class AuthServiceProvider extends ServiceProvider
         TrainingSite::class => TrainingSitePolicy::class,
         PortfolioEntry::class => PortfolioEntryPolicy::class,
         StudentPortfolio::class => StudentPortfolioPolicy::class, // إذا كان لديك
+         EvaluationTemplate::class => EvaluationTemplatePolicy::class,
+    Evaluation::class => EvaluationPolicy::class,
     ];
 
     public function boot(): void

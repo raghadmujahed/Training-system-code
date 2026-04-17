@@ -3,21 +3,21 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\EvaluationFormType;
 
 class StoreEvaluationTemplateRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize()
     {
-        return in_array($this->user()->role?->name, ['admin', 'coordinator']);
+        return $this->user()->can('create', EvaluationTemplate::class);
     }
 
-    public function rules(): array
+    public function rules()
     {
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'form_type' => 'required|in:evaluation,student_form',
+            'department_id' => 'nullable|exists:departments,id',
         ];
     }
 }

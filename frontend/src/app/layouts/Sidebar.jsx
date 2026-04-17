@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const roleLabels = {
   admin: "مدير النظام",
@@ -14,36 +15,21 @@ const roleLabels = {
 const menus = {
   admin: [
     { name: "الرئيسية", path: "/dashboard" },
-    
-    // إدارة المستخدمين والصلاحيات
     { name: "إدارة المستخدمين", path: "/admin/users" },
     { name: "إدارة الأدوار", path: "/admin/roles" },
-    { name: "إدارة الصلاحيات", path: "/admin/permissions" },
-    
-    // إدارة الهيكل الأكاديمي
     { name: "إدارة الأقسام", path: "/admin/departments" },
     { name: "إدارة المساقات", path: "/admin/courses" },
     { name: "إدارة الشعب", path: "/admin/sections" },
     { name: "تسجيل الطلاب في الشعب", path: "/admin/enrollments" },
-    
-    // إدارة التدريب الميداني
     { name: "إدارة مواقع التدريب", path: "/admin/training-sites" },
     { name: "إدارة الفترات التدريبية", path: "/admin/training-periods" },
-    
-    // إدارة المحتوى والإشعارات
     { name: "إدارة الإعلانات", path: "/admin/announcements" },
     { name: "إدارة قوالب التقييم", path: "/admin/evaluation-templates" },
-    
-    // إدارة النظام
     { name: "النسخ الاحتياطي", path: "/admin/backups" },
     { name: "سجل النشاطات", path: "/admin/activity-logs" },
     { name: "الميزات الديناميكية", path: "/admin/feature-flags" },
-    
-    // تقارير
     { name: "التقارير", path: "/reports" },
   ],
-  
-
   supervisor: [
     { name: "الرئيسية", path: "/supervisor/dashboard" },
     { name: "المهام", path: "/supervisor/tasks" },
@@ -55,13 +41,11 @@ const menus = {
     { name: "التقييمات", path: "/supervisor/evaluations" },
     { name: "التقارير", path: "/supervisor/reports" },
   ],
-
   mentor: [
     { name: "الرئيسية", path: "/mentor/attendance" },
     { name: "الحضور", path: "/mentor/attendance" },
     { name: "التقارير اليومية", path: "/mentor/reports" },
   ],
-
   student: [
     { name: "الرئيسية", path: "/student/dashboard" },
     { name: "طلب التدريب", path: "/student/training-request" },
@@ -71,14 +55,12 @@ const menus = {
     { name: "التكليفات", path: "/student/assignments" },
     { name: "الإشعارات", path: "/student/notifications-updates" },
   ],
-
   coordinator: [
     { name: "الرئيسية", path: "/coordinator/dashboard" },
     { name: "الطلبة", path: "/coordinator/students" },
     { name: "التوزيع", path: "/coordinator/distribution" },
     { name: "الإحصائيات", path: "/coordinator/statistics" },
   ],
-
   school_manager: [
     { name: "الرئيسية", path: "/principal/dashboard" },
     { name: "الملف الشخصي", path: "/principal/profile" },
@@ -86,12 +68,10 @@ const menus = {
     { name: "الطلبة المتدربون", path: "/principal/trainee-students" },
     { name: "الكتب الرسمية", path: "/principal/official-letters" },
   ],
-
   health_directorate: [
     { name: "الرئيسية", path: "/health/dashboard" },
     { name: "أماكن التدريب", path: "/health/training-sites" },
   ],
-
   education_directorate: [
     { name: "الرئيسية", path: "/education/dashboard" },
     { name: "أماكن التدريب", path: "/education/training-sites" },
@@ -99,38 +79,56 @@ const menus = {
   ],
 };
 
+
 export default function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
   const savedUser = JSON.parse(localStorage.getItem("user")) || {};
   const role = savedUser?.role?.name || savedUser?.role || "admin";
   const userName = savedUser?.name || "مستخدم تجريبي";
-const roleName = roleLabels[role] || "مستخدم النظام";
-const menu = menus[role] || [];
+  const roleName = roleLabels[role] || "مستخدم النظام";
+  const menu = menus[role] || [];
 
-  const getInitials = (name) => {
+  // قراءة حالة الميزة من بيانات المستخدم المخزنة (إذا وُجدت)
+  const [trainingRequestEnabled, setTrainingRequestEnabled] = useState(() => {
+    // افترض أن بيانات المستخدم تحتوي على حقل features أو permissions
+    const userFeatures = savedUser?.features || {};
+    // إذا كان الحقل موجوداً، استخدمه، وإلا افترض true (لأنه قد لا يكون موجوداً للتعديل)
+    return userFeatures["training_requests.create"] !== undefined
+      ? userFeatures["training_requests.create"] === 1
+      : true;
+  });
+  const [showDisabledMessage, setShowDisabledMessage] = useState(false);
+
+ const getInitials = (name) => {
     if (!name) return "HU";
     const parts = name.trim().split(" ").filter(Boolean);
     if (parts.length === 1) return parts[0].slice(0, 2);
     return `${parts[0][0]}${parts[1][0]}`;
   };
-
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/");
-  };
-
+  }; 
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) {
       onClose();
+    }}
+
+  const handleTrainingRequestClick = (e, path) => {
+    if (!trainingRequestEnabled) {
+      e.preventDefault();
+      setShowDisabledMessage(true);
+      setTimeout(() => setShowDisabledMessage(false), 3000);
+    } else {
+      handleLinkClick();
+      navigate(path);
     }
   };
 
   return (
     <aside className={`sidebar ${isOpen ? "open" : ""}`}>
       <div className="sidebar-mobile-header">
-        <button className="sidebar-close-btn" onClick={onClose}>
-          ✕
-        </button>
+        <button className="sidebar-close-btn" onClick={onClose}>✕</button>
       </div>
 
       <div className="sidebar-brand">
@@ -141,34 +139,56 @@ const menu = menus[role] || [];
       <div className="sidebar-menu">
         <div className="sidebar-section-title">القائمة الرئيسية</div>
 
-        {menu.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            onClick={handleLinkClick}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? "active" : ""}`
-            }
-          >
-            <span>{item.name}</span>
-          </NavLink>
-        ))}
+        {menu.map((item) => {
+          if (role === "student" && item.name === "طلب التدريب") {
+            return (
+              <div key={item.path} className="sidebar-item-wrapper">
+                <a
+                  href="#"
+                  onClick={(e) => handleTrainingRequestClick(e, item.path)}
+                  className={`sidebar-link ${!trainingRequestEnabled ? "disabled" : ""}`}
+                  style={{
+                    opacity: trainingRequestEnabled ? 1 : 0.6,
+                    cursor: trainingRequestEnabled ? "pointer" : "not-allowed",
+                  }}
+                >
+                  <span>{item.name}</span>
+                </a>
+              </div>
+            );
+          }
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              onClick={handleLinkClick}
+              className={({ isActive }) =>
+                `sidebar-link ${isActive ? "active" : ""}`
+              }
+            >
+              <span>{item.name}</span>
+            </NavLink>
+          );
+        })}
       </div>
+
+      {showDisabledMessage && (
+        <div className="disabled-feature-toast">
+          ⛔ عذراً، خدمة تقديم طلبات التدريب مغلقة حالياً.
+        </div>
+      )}
 
       <div className="sidebar-footer">
         <div className="sidebar-user-box">
           <div className="sidebar-user-avatar">{getInitials(userName)}</div>
-
           <div>
             <strong>{userName}</strong>
             <span>{roleName}</span>
           </div>
         </div>
-
         <button className="sidebar-logout-btn" onClick={handleLogout}>
           تسجيل الخروج
         </button>
-
         <p>البوابة الأكاديمية لإدارة التدريب العملي والتربوي</p>
       </div>
     </aside>

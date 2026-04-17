@@ -23,30 +23,33 @@ class UserController extends Controller
         $this->authorizeResource(User::class, 'user');
     }
 
-  public function index(Request $request)
-{
-    $users = User::query();
-    
-    $users->when($request->role_id, function ($q) use ($request) {
-        $q->where('role_id', $request->role_id);
-    });
+    public function index(Request $request)
+    {
+        $users = User::query();
+        
+        $users->when($request->role_id, function ($q) use ($request) {
+            $q->where('role_id', $request->role_id);
+        });
 
-    $users->when($request->status, function ($q) use ($request) {
-        $q->where('status', $request->status);
-    });
+        $users->when($request->status, function ($q) use ($request) {
+            $q->where('status', $request->status);
+        });
 
-    $users->when($request->search, function ($q) use ($request) {
-        $q->where('name', 'like', "%{$request->search}%")
-          ->orWhere('email', 'like', "%{$request->search}%");
-    });
+        $users->when($request->search, function ($q) use ($request) {
+            $q->where('name', 'like', "%{$request->search}%")
+              ->orWhere('email', 'like', "%{$request->search}%");
+        });
+        $users->when($request->major, function ($q) use ($request) {
+    $q->where('major', 'like', "%{$request->major}%");
+});
 
-    return response()->json($users->with('role')->paginate(10));
-}
+        return response()->json($users->with('role')->paginate(10));
+    }
 
     public function store(StoreUserRequest $request)
     {
         $user = $this->userService->createUser($request->validated());
-        return new UserResource($user);
+        return new UserResource($user->load('role', 'department'));
     }
 
     public function show(User $user)
@@ -57,7 +60,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user = $this->userService->updateUser($user, $request->validated());
-        return new UserResource($user);
+        return new UserResource($user->load('role', 'department'));
     }
 
     public function destroy(User $user)
@@ -69,7 +72,7 @@ class UserController extends Controller
     public function changeStatus(ChangeUserStatusRequest $request, User $user)
     {
         $user = $this->userService->changeStatus($user, $request->status);
-        return new UserResource($user);
+        return new UserResource($user->load('role', 'department'));
     }
 
     // ========== دوال تسجيل الدخول والخروج ==========
@@ -103,9 +106,9 @@ class UserController extends Controller
     }
 
     public function currentUser(Request $request)
-{
-    return new UserResource($request->user()->load(['role', 'department']));
-}
+    {
+        return new UserResource($request->user()->load(['role', 'department']));
+    }
 
     public function logout(Request $request)
     {
@@ -115,5 +118,4 @@ class UserController extends Controller
             'message' => 'تم تسجيل الخروج بنجاح'
         ]);
     }
-    
 }

@@ -23,17 +23,22 @@ class StudentPortfolioController extends Controller
      * Get current user's portfolio (SAFE VERSION)
      * Route: /api/my-portfolio
      */
-public function getMyPortfolio(Request $request)
+public function getStudentPortfolio(Request $request)
 {
     $user = $request->user();
-
-    $portfolio = StudentPortfolio::with('entries')
-        ->firstOrCreate(
-            ['user_id' => $user->id],
-            ['training_assignment_id' => null]
-        );
-
-    return new StudentPortfolioResource($portfolio->load('entries'));
+    
+    // البحث عن المحفظة
+    $portfolio = StudentPortfolio::where('user_id', $user->id)->first();
+    
+    // إذا لم توجد محفظة، نعيد كائن فارغ أو null مع كود 200 وليس 500
+    if (!$portfolio) {
+        return response()->json([
+            'data' => null,
+            'message' => 'لا توجد محفظة إنجاز لهذا الطالب بعد'
+        ], 200);
+    }
+    
+    return response()->json($portfolio);
 }
 
     /**

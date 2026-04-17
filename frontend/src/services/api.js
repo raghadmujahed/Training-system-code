@@ -141,7 +141,19 @@ export const getActivityLogs = (params) => apiClient.get('/activity-logs', { par
 export const deleteActivityLog = (id) => apiClient.delete(`/activity-logs/${id}`).then(res => res.data);
 
 // ==================== Feature Flags ====================
-export const getFeatureFlags = () => apiClient.get('/feature-flags').then(res => res.data);
+// في نهاية ملف api.js (أو في قسم الميزات)
+
+export const getFeatureFlags = async () => {
+  try {
+    const response = await apiClient.get('/feature-flags', {
+      params: { _: Date.now() }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching feature flags:', error);
+    throw error;
+  }
+};
 export const updateFeatureFlag = (id, isOpen) => apiClient.patch(`/feature-flags/${id}`, { is_open: isOpen }).then(res => res.data);
 
 // ==================== Evaluation Templates ====================
@@ -176,9 +188,12 @@ export const getUser = async (id) => {
 
 // ==================== Roles (كاملة) ====================
 
+// في api.js
 export const getRole = async (id) => {
-    const response = await apiClient.get(`/roles/${id}`);
-    return response.data;
+  const response = await apiClient.get(`/roles/${id}`);
+  // تأكد من أن response.data يحتوي على permissions
+  console.log("getRole response:", response.data);
+  return response.data;
 };
 
 export const getPermission = async (id) => {
@@ -259,7 +274,6 @@ export const updateStudentTrainingLog = async (id, data) => {
     const response = await apiClient.put(`/student/training-logs/${id}`, data);
     return response.data;
 };
-
 export const submitStudentTrainingLog = async (id) => {
     const response = await apiClient.post(`/student/training-logs/${id}/submit`);
     return response.data;
@@ -303,4 +317,10 @@ export const getStudentNotifications = async () => {
 export const markNotificationAsRead = async (id) => {
     const response = await apiClient.patch(`/student/notifications/${id}/read`);
     return response.data;
+};
+
+// تحديث صلاحيات دور معين (إذا كان الـ API يدعمه)
+export const updateRolePermissions = async (roleId, permissionIds) => {
+  const response = await apiClient.put(`/roles/${roleId}/permissions`, { permissions: permissionIds });
+  return response.data;
 };

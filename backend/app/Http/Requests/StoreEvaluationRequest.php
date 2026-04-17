@@ -6,21 +6,18 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEvaluationRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize()
     {
-        return true;
+        return $this->user()->can('create', Evaluation::class);
     }
 
-    public function rules(): array
+    public function rules()
     {
         return [
             'training_assignment_id' => 'required|exists:training_assignments,id',
+            'evaluator_id' => 'required|exists:users,id',
             'template_id' => 'required|exists:evaluation_templates,id',
-            'scores' => 'required|array',
-            'scores.*.item_id' => 'required|exists:evaluation_items,id',
-            'scores.*.score' => 'nullable|numeric|min:0',
-            'scores.*.response_text' => 'nullable|string',
-            'scores.*.file' => 'nullable|file',
+            'total_score' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
         ];
     }

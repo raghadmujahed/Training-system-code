@@ -28,10 +28,12 @@ class RoleController extends Controller
         return new RoleResource($role);
     }
 
-    public function show(Role $role)
-    {
-        return new RoleResource($role->load('permissions'));
-    }
+  // في RoleController.php
+public function show($id)
+{
+    $role = Role::with('permissions')->findOrFail($id);
+    return response()->json($role);
+}
 
     public function update(UpdateRoleRequest $request, Role $role)
     {

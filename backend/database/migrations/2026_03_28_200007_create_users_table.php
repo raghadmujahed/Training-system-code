@@ -35,6 +35,21 @@ return new class extends Migration
             // Additional fields
             $table->string('phone')->nullable();
 
+             $table->string('major')->nullable();
+        // حقول المعلم ومدير المدرسة
+        $table->string('subject')->nullable();
+        $table->string('school_name')->nullable();
+        // حقل القسم للمشرف الأكاديمي
+        $table->string('academic_department')->nullable();
+        // يمكن إضافة أي حقول أخرى حسب الحاجة
+
+        $table->string('institution_name')->nullable();
+
+         $table->foreignId('training_site_id')
+                  ->nullable()
+                  ->constrained('training_sites')
+                  ->onDelete('set null');
+
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

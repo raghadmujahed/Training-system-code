@@ -6,16 +6,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEvaluationRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize()
     {
-        return true; // فقط المقيم الأصلي أو المسؤول
+        return $this->user()->can('update', $this->evaluation);
     }
 
-    public function rules(): array
+    public function rules()
     {
         return [
+            'total_score' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
-            'status' => 'sometimes|in:draft,submitted,approved',
         ];
     }
 }

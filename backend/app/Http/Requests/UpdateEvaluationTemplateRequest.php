@@ -6,17 +6,18 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEvaluationTemplateRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize()
     {
-        return in_array($this->user()->role?->name, ['admin', 'coordinator']);
+        return $this->user()->can('update', $this->evaluation_template);
     }
 
-    public function rules(): array
+    public function rules()
     {
         return [
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
             'form_type' => 'sometimes|in:evaluation,student_form',
+            'department_id' => 'nullable|exists:departments,id',
         ];
     }
 }

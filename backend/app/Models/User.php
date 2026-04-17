@@ -13,7 +13,11 @@ class User extends Authenticatable
 
     protected $fillable = [
         'university_id', 'name', 'email', 'password', 'status',
-        'department_id', 'role_id', 'phone'
+        'department_id', 'role_id', 'phone', 'major', 'subject', 'school_name', 'academic_department',
+            'institution_name', 
+                'training_site_id',
+
+
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -134,5 +138,33 @@ class User extends Authenticatable
 public function enrollments()
 {
     return $this->hasMany(Enrollment::class);
+}
+public function getFeaturesAttribute()
+{
+    // نقرأ قيمة الميزة من جدول feature_flags
+    $flag = \App\Models\FeatureFlag::where('name', 'training_requests.create')->first();
+    return [
+        'training_requests.create' => $flag ? (int) $flag->is_active : 0,
+    ];
+}
+// app/Models/User.php
+
+public function trainingSite()
+{
+    return $this->belongsTo(TrainingSite::class, 'training_site_id');
+}
+public function isAdmin()
+{
+    return $this->role?->name === 'admin';
+}
+
+public function evaluationTemplates()
+{
+    return $this->hasMany(EvaluationTemplate::class, 'department_id', 'department_id');
+}
+
+public function evaluations()
+{
+    return $this->hasMany(Evaluation::class, 'evaluator_id');
 }
 }
