@@ -70,6 +70,14 @@ import Attendance from "../pages/mentor/Attendance";
 
 // Coordinator
 import CoordinatorDashboard from "../pages/dashboard/CoordinatorDashboard";
+import CoordinatorDashboard from "../pages/coordinator/Dashboard";
+import CoordinatorStudents from "../pages/coordinator/Students";
+import CoordinatorSections from "../pages/coordinator/Sections";
+import CoordinatorStudentDistribution from "../pages/coordinator/StudentDistribution";
+import CoordinatorSupervisorDistribution from "../pages/coordinator/SupervisorDistribution";
+import CoordinatorOfficialLetters from "../pages/coordinator/OfficialLetters";
+import CoordinatorMonitoring from "../pages/coordinator/Monitoring";
+import CoordinatorStatistics from "../pages/coordinator/Statistics";
 
 // Principal
 import PrincipalDashboard from "../pages/dashboard/PrincipalDashboard";
@@ -206,6 +214,13 @@ export default function AppRouter() {
 
           {/* Coordinator Portal */}
           <Route path="/coordinator/dashboard" element={<CoordinatorDashboard />} />
+          <Route path="/coordinator/students" element={<CoordinatorStudents />} />
+          <Route path="/coordinator/sections" element={<CoordinatorSections />} />
+          <Route path="/coordinator/student-distribution" element={<CoordinatorStudentDistribution />} />
+          <Route path="/coordinator/supervisor-distribution" element={<CoordinatorSupervisorDistribution />} />
+          <Route path="/coordinator/official-letters" element={<CoordinatorOfficialLetters />} />
+          <Route path="/coordinator/monitoring" element={<CoordinatorMonitoring />} />
+          <Route path="/coordinator/statistics" element={<CoordinatorStatistics />} />
 
           {/* Principal Portal */}
           <Route path="/principal/dashboard" element={<PrincipalDashboard />} />
