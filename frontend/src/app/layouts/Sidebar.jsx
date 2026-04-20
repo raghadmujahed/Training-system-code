@@ -55,16 +55,12 @@ const menus = {
     { name: "التكليفات", path: "/student/assignments" },
     { name: "الإشعارات", path: "/student/notifications-updates" },
   ],
- coordinator: [
-  { name: "الرئيسية", path: "/coordinator/dashboard" },
-  { name: "الطلبة", path: "/coordinator/students" },
-  { name: "الشعب الدراسية", path: "/coordinator/sections" },
-  { name: "توزيع الطلبة", path: "/coordinator/student-distribution" },
-  { name: "توزيع المشرفين", path: "/coordinator/supervisor-distribution" },
-  { name: "الكتب الرسمية", path: "/coordinator/official-letters" },
-  { name: "متابعة التدريب", path: "/coordinator/monitoring" },
-  { name: "الإحصائيات", path: "/coordinator/statistics" },
-],
+  coordinator: [
+    { name: "الرئيسية", path: "/coordinator/dashboard" },
+    { name: "الطلبة", path: "/coordinator/students" },
+    { name: "التوزيع", path: "/coordinator/distribution" },
+    { name: "الإحصائيات", path: "/coordinator/statistics" },
+  ],
   school_manager: [
     { name: "الرئيسية", path: "/principal/dashboard" },
     { name: "الملف الشخصي", path: "/principal/profile" },
